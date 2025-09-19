@@ -3,7 +3,6 @@ const loginPage = document.getElementById('login-page');
 const patientDashboard = document.getElementById('patient-dashboard');
 const doctorDashboard = document.getElementById('doctor-dashboard');
 const usernameInput = document.getElementById('username');
-const passwordInput = document.getElementById('password');
 const loginButton = document.getElementById('login-button');
 const logoutButtons = document.querySelectorAll('#logout-btn, #doctor-logout-btn');
 const patientGreeting = document.getElementById('patient-greeting');
@@ -30,12 +29,6 @@ let appState = {
     isAdmin: false,
     page: 'Symptom Checker',
     history: JSON.parse(localStorage.getItem('healthNavigatorHistory')) || [],
-};
-
-const MOCK_USERS = {
-    "patient": "patientpass",
-    "doctor": "doctorpass",
-    "john.doe": "johndoe123"
 };
 
 // --- API Simulation (replaces Python functions) ---
@@ -155,18 +148,18 @@ function renderPredictionCards(predictions) {
 
 // --- Event Listeners ---
 loginButton.addEventListener('click', () => {
-    const username = usernameInput.value;
-    const password = passwordInput.value;
+    const username = usernameInput.value.trim();
 
-    if (MOCK_USERS[username] === password) {
-        appState.isLoggedIn = true;
-        appState.username = username;
-        appState.isAdmin = (username === "doctor");
-        alert('Login successful!'); // Use a custom modal in a real app
-        renderUI();
-    } else {
-        alert('Invalid username or password.'); // Use a custom modal
+    if (!username) {
+        alert("Please enter a username to continue."); // Use a custom modal
+        return;
     }
+
+    appState.isLoggedIn = true;
+    appState.username = username;
+    appState.isAdmin = (username.toLowerCase() === "doctor");
+    alert(`Login successful as ${username}!`); // Use a custom modal in a real app
+    renderUI();
 });
 
 logoutButtons.forEach(button => {
