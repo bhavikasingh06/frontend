@@ -31,19 +31,55 @@
                 <h3 id="patient-greeting">Hello, 👋</h3>
                 <hr>
                 <nav>
-                    <button id="symptom-checker-btn" class="nav-btn active">Symptom Checker</button>
+                    <button id="overview-btn" class="nav-btn active">Overview</button>
+                    <button id="symptom-checker-btn" class="nav-btn">Symptom Checker</button>
+                    <button id="book-appointment-btn" class="nav-btn">Book Appointment</button>
                     <button id="my-history-btn" class="nav-btn">My History</button>
                 </nav>
                 <hr>
                 <button id="logout-btn" class="nav-btn">Logout</button>
             </aside>
             <div class="main-content">
-                <div id="symptom-checker-view" class="content-view active">
+                <!-- Overview View -->
+                <div id="overview-view" class="content-view active">
+                    <h1 class="content-title">Dashboard Overview</h1>
+                    <div class="info-message-container">
+                        <div class="mock-prediction">
+                            <h3>Quick Health Snapshot</h3>
+                            <p>Based on your last check-in, you appear to be in good health. Keep it up!</p>
+                            <p class="suggestion">Feeling unwell? Try the **Symptom Checker** for a quick analysis.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Symptom Checker View -->
+                <div id="symptom-checker-view" class="content-view">
                     <h1 class="content-title">Symptom Checker</h1>
                     <p class="info-message">Enter your symptoms below to get a prediction.</p>
                     <textarea id="symptoms-input" placeholder="Describe your symptoms:" rows="5"></textarea>
                     <button id="get-prediction-btn">Get Prediction</button>
                 </div>
+
+                <!-- Book Appointment View -->
+                <div id="book-appointment-view" class="content-view">
+                    <h1 class="content-title">Book an Appointment</h1>
+                    <p class="info-message">Select a doctor and a convenient time.</p>
+                    <div class="card-container">
+                        <label for="doctor-select">Choose a Doctor:</label>
+                        <select id="doctor-select">
+                            <option value="Dr. Khushal">Dr. Khushal</option>
+                            <option value="Dr. Saini">Dr. Saini</option>
+                            <option value="Dr. Smith">Dr. Smith</option>
+                        </select>
+                        <label for="appointment-date">Date:</label>
+                        <input type="date" id="appointment-date">
+                        <label for="appointment-time">Time:</label>
+                        <input type="time" id="appointment-time">
+                        <button id="book-btn">Book Appointment</button>
+                    </div>
+                </div>
+
+                <!-- My History View -->
                 <div id="my-history-view" class="content-view">
                     <h1 class="content-title">My History 📖</h1>
                     <div class="history-table-container">
@@ -69,27 +105,52 @@
             <aside class="sidebar">
                 <h3 id="doctor-greeting">Hello, Dr. 👨‍⚕️</h3>
                 <hr>
+                <button id="doctor-history-btn" class="nav-btn active">Patient History</button>
+                <button id="doctor-appointments-btn" class="nav-btn">Upcoming Appointments</button>
+                <hr>
                 <button id="doctor-logout-btn" class="nav-btn">Logout</button>
             </aside>
             <div class="main-content">
-                <h1 class="content-title">Doctor's Dashboard</h1>
-                <p class="info-message">View and filter all patient history records.</p>
-                <input type="text" id="doctor-search" placeholder="Search patients by username...">
-                <div class="history-table-container">
-                    <table id="all-history-table">
-                        <thead>
-                            <tr>
-                                <th>Username</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Symptoms</th>
-                                <th>Prediction</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                <!-- Patient History View for Doctor -->
+                <div id="doctor-history-view" class="content-view active">
+                    <h1 class="content-title">Patient History</h1>
+                    <p class="info-message">View and filter all patient history records.</p>
+                    <input type="text" id="doctor-search" placeholder="Search patients by username...">
+                    <div class="history-table-container">
+                        <table id="all-history-table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Symptoms</th>
+                                    <th>Prediction</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <p class="info-message empty-history-msg" style="display: none;">No patient records available yet.</p>
                 </div>
-                <p class="info-message empty-history-msg" style="display: none;">No patient records available yet.</p>
+                
+                <!-- Upcoming Appointments View for Doctor -->
+                <div id="doctor-appointments-view" class="content-view">
+                    <h1 class="content-title">Upcoming Appointments</h1>
+                    <p class="info-message">View appointments booked with you.</p>
+                     <div class="history-table-container">
+                        <table id="doctor-appointments-table">
+                            <thead>
+                                <tr>
+                                    <th>Patient</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <p class="info-message empty-history-msg" style="display: none;">No upcoming appointments.</p>
+                </div>
             </div>
         </div>
 
