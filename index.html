@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Navigator 🩺</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main id="app-container">
+
+        <!-- Login Page -->
+        <div id="login-page" class="page-section active">
+            <h1 class="main-title">Welcome to Health Navigator</h1>
+            <p class="subtitle">Your first step to a healthier you.</p>
+            <div class="login-container">
+                <div class="card-container">
+                    <h3>Login to your account</h3>
+                    <input type="text" id="username" placeholder="Username">
+                    <input type="password" id="password" placeholder="Password">
+                    <button id="login-button">Login</button>
+                </div>
+                <p class="login-note">Don't have an account? Sign up now! (coming soon)</p>
+            </div>
+        </div>
+
+        <!-- Patient Dashboard -->
+        <div id="patient-dashboard" class="page-section">
+            <aside class="sidebar">
+                <h3 id="patient-greeting">Hello, 👋</h3>
+                <hr>
+                <nav>
+                    <button id="symptom-checker-btn" class="nav-btn active">Symptom Checker</button>
+                    <button id="my-history-btn" class="nav-btn">My History</button>
+                </nav>
+                <hr>
+                <button id="logout-btn" class="nav-btn">Logout</button>
+            </aside>
+            <div class="main-content">
+                <div id="symptom-checker-view" class="content-view active">
+                    <h1 class="content-title">Symptom Checker</h1>
+                    <p class="info-message">Enter your symptoms below to get a prediction.</p>
+                    <textarea id="symptoms-input" placeholder="Describe your symptoms:" rows="5"></textarea>
+                    <button id="get-prediction-btn">Get Prediction</button>
+                </div>
+                <div id="my-history-view" class="content-view">
+                    <h1 class="content-title">My History 📖</h1>
+                    <div class="history-table-container">
+                        <table id="patient-history-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Symptoms</th>
+                                    <th>Prediction</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <p class="info-message empty-history-msg" style="display: none;">No history to display yet.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doctor Dashboard -->
+        <div id="doctor-dashboard" class="page-section">
+            <aside class="sidebar">
+                <h3 id="doctor-greeting">Hello, Dr. 👨‍⚕️</h3>
+                <hr>
+                <button id="doctor-logout-btn" class="nav-btn">Logout</button>
+            </aside>
+            <div class="main-content">
+                <h1 class="content-title">Doctor's Dashboard</h1>
+                <p class="info-message">View and filter all patient history records.</p>
+                <input type="text" id="doctor-search" placeholder="Search patients by username...">
+                <div class="history-table-container">
+                    <table id="all-history-table">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Symptoms</th>
+                                <th>Prediction</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <p class="info-message empty-history-msg" style="display: none;">No patient records available yet.</p>
+            </div>
+        </div>
+
+        <!-- Prediction Pop-up (hidden by default) -->
+        <div id="prediction-popup" class="prediction-container hidden">
+            <h3 class="popup-title">Possible Conditions</h3>
+            <p class="popup-note">Please consult a healthcare professional for a definitive diagnosis.</p>
+            <div id="prediction-cards-container">
+                <!-- Cards will be injected here by JS -->
+            </div>
+            <button id="close-popup-btn">Close</button>
+        </div>
+
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
