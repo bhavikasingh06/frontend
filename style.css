@@ -44,6 +44,12 @@ body {
 }
 
 /* --- Login Page --- */
+#login-page.page-section.active {
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
 .login-container {
     max-width: 400px;
     margin: 0 auto;
@@ -62,7 +68,7 @@ body {
     color: #f0f2f6;
 }
 
-input[type="text"], input[type="password"], textarea {
+input[type="text"], input[type="password"], textarea, input[type="date"], input[type="time"], select {
     background-color: #24262c;
     border-radius: 8px;
     border: 2px solid #44474e;
@@ -148,14 +154,36 @@ button:hover {
     background-color: #1a1c22;
 }
 
+.info-message-container {
+    background-color: #1a1c22;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.mock-prediction {
+    text-align: center;
+}
+
+.mock-prediction h3 {
+    color: #89b4f4;
+    margin-top: 0;
+}
+
+.suggestion {
+    margin-top: 1rem;
+    font-style: italic;
+    color: #aaa;
+}
+
 textarea#symptoms-input {
     width: 100%;
     min-height: 150px;
     box-sizing: border-box;
 }
 
-#get-prediction-btn {
+#get-prediction-btn, #book-btn {
     width: 100%;
+    margin-top: 1rem;
 }
 
 /* --- History Tables --- */
