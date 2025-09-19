@@ -8,28 +8,54 @@ const loginButton = document.getElementById('login-button');
 const logoutButtons = document.querySelectorAll('#logout-btn, #doctor-logout-btn');
 const patientGreeting = document.getElementById('patient-greeting');
 const doctorGreeting = document.getElementById('doctor-greeting');
-const navButtons = document.querySelectorAll('.nav-btn');
+
+// Patient Nav
+const overviewBtn = document.getElementById('overview-btn');
 const symptomCheckerBtn = document.getElementById('symptom-checker-btn');
+const bookAppointmentBtn = document.getElementById('book-appointment-btn');
 const myHistoryBtn = document.getElementById('my-history-btn');
+
+// Patient Views
+const overviewView = document.getElementById('overview-view');
 const symptomCheckerView = document.getElementById('symptom-checker-view');
+const bookAppointmentView = document.getElementById('book-appointment-view');
 const myHistoryView = document.getElementById('my-history-view');
+
 const symptomsInput = document.getElementById('symptoms-input');
 const getPredictionBtn = document.getElementById('get-prediction-btn');
 const predictionPopup = document.getElementById('prediction-popup');
 const predictionCardsContainer = document.getElementById('prediction-cards-container');
 const closePopupBtn = document.getElementById('close-popup-btn');
 const patientHistoryTableBody = document.querySelector('#patient-history-table tbody');
-const allHistoryTableBody = document.querySelector('#all-history-table tbody');
-const doctorSearchInput = document.getElementById('doctor-search');
 const emptyHistoryMsgs = document.querySelectorAll('.empty-history-msg');
 
-// --- Mock Data (replaces Streamlit session state) ---
+// Doctor Nav
+const doctorHistoryBtn = document.getElementById('doctor-history-btn');
+const doctorAppointmentsBtn = document.getElementById('doctor-appointments-btn');
+
+// Doctor Views
+const doctorHistoryView = document.getElementById('doctor-history-view');
+const doctorAppointmentsView = document.getElementById('doctor-appointments-view');
+
+const allHistoryTableBody = document.querySelector('#all-history-table tbody');
+const doctorAppointmentsTableBody = document.querySelector('#doctor-appointments-table tbody');
+const doctorSearchInput = document.getElementById('doctor-search');
+
+// Book Appointment fields
+const doctorSelect = document.getElementById('doctor-select');
+const appointmentDateInput = document.getElementById('appointment-date');
+const appointmentTimeInput = document.getElementById('appointment-time');
+const bookBtn = document.getElementById('book-btn');
+
+// --- Mock Data & State Management ---
 let appState = {
 isLoggedIn: false,
 username: null,
 isAdmin: false,
-page: 'Symptom Checker',
+patientView: 'Overview',
+doctorView: 'Patient History',
 history: JSON.parse(localStorage.getItem('healthNavigatorHistory')) || [],
+appointments: JSON.parse(localStorage.getItem('healthNavigatorAppointments')) || [],
 };
 
 // --- API Simulation (replaces Python functions) ---
@@ -70,29 +96,46 @@ if (appState.isLoggedIn) {
     if (appState.isAdmin) {
         doctorDashboard.style.display = 'flex';
         doctorGreeting.textContent = `Hello, Dr. ${appState.username} 👨‍⚕️`;
-        renderAllHistory(appState.history);
+        switchDoctorView(appState.doctorView);
     } else {
         patientDashboard.style.display = 'flex';
         patientGreeting.textContent = `Hello, ${appState.username} 👋`;
-        switchPatientView(appState.page);
+        switchPatientView(appState.patientView);
     }
 }
 
 }
 
-function switchPatientView(page) {
-symptomCheckerBtn.classList.remove('active');
-myHistoryBtn.classList.remove('active');
-symptomCheckerView.style.display = 'none';
-myHistoryView.style.display = 'none';
+function switchPatientView(view) {
+const navButtons = document.querySelectorAll('#patient-dashboard .nav-btn');
+const contentViews = document.querySelectorAll('#patient-dashboard .content-view');
 
-if (page === 'Symptom Checker') {
-    symptomCheckerBtn.classList.add('active');
-    symptomCheckerView.style.display = 'block';
-} else if (page === 'My History') {
-    myHistoryBtn.classList.add('active');
-    myHistoryView.style.display = 'block';
+navButtons.forEach(btn => btn.classList.remove('active'));
+contentViews.forEach(v => v.classList.remove('active'));
+
+document.getElementById(`${view.toLowerCase().replace(' ', '-')}-btn`).classList.add('active');
+document.getElementById(`${view.toLowerCase().replace(' ', '-')}-view`).classList.add('active');
+
+if (view === 'My History') {
     renderPatientHistory();
+}
+
+}
+
+function switchDoctorView(view) {
+const navButtons = document.querySelectorAll('#doctor-dashboard .nav-btn');
+const contentViews = document.querySelectorAll('#doctor-dashboard .content-view');
+
+navButtons.forEach(btn => btn.classList.remove('active'));
+contentViews.forEach(v => v.classList.remove('active'));
+
+document.getElementById(`doctor-${view.toLowerCase().replace(' ', '-')}-btn`).classList.add('active');
+document.getElementById(`doctor-${view.toLowerCase().replace(' ', '-')}-view`).classList.add('active');
+
+if (view === 'Patient History') {
+    renderAllHistory(appState.history);
+} else if (view === 'Upcoming Appointments') {
+    renderDoctorAppointments();
 }
 
 }
@@ -120,6 +163,20 @@ emptyHistoryMsgs[1].style.display = 'none';
 history.forEach(item => {
 const row = allHistoryTableBody.insertRow();
 row.innerHTML = <td>${item.username}</td> <td>${item.date}</td> <td>${item.time}</td> <td>${item.symptoms}</td> <td>${item.prediction}</td>;
+});
+}
+}
+
+function renderDoctorAppointments() {
+const doctorAppointments = appState.appointments.filter(item => item.doctor === Dr. ${appState.username});
+doctorAppointmentsTableBody.innerHTML = '';
+if (doctorAppointments.length === 0) {
+emptyHistoryMsgs[3].style.display = 'block';
+} else {
+emptyHistoryMsgs[3].style.display = 'none';
+doctorAppointments.forEach(item => {
+const row = doctorAppointmentsTableBody.insertRow();
+row.innerHTML = <td>${item.patient}</td> <td>${item.date}</td> <td>${item.time}</td>;
 });
 }
 }
@@ -158,10 +215,10 @@ if (isAuthenticated) {
     appState.isLoggedIn = true;
     appState.username = username;
     appState.isAdmin = isAdmin;
-    alert(`Login successful! Welcome, ${username}.`);
+    alert(`Login successful! Welcome, ${username}.`); // Use a custom modal in a real app
     renderUI();
 } else {
-    alert("Invalid username or password. Please try again.");
+    alert("Invalid username or password. Please try again."); // Use a custom modal
 }
 
 });
@@ -171,19 +228,38 @@ button.addEventListener('click', () => {
 appState.isLoggedIn = false;
 appState.username = null;
 appState.isAdmin = false;
-appState.page = 'Symptom Checker';
+appState.patientView = 'Overview';
+appState.doctorView = 'Patient History';
 renderUI();
 });
 });
 
+// Patient Navigation
+overviewBtn.addEventListener('click', () => {
+appState.patientView = 'Overview';
+switchPatientView(appState.patientView);
+});
 symptomCheckerBtn.addEventListener('click', () => {
-appState.page = 'Symptom Checker';
-switchPatientView(appState.page);
+appState.patientView = 'Symptom Checker';
+switchPatientView(appState.patientView);
+});
+bookAppointmentBtn.addEventListener('click', () => {
+appState.patientView = 'Book Appointment';
+switchPatientView(appState.patientView);
+});
+myHistoryBtn.addEventListener('click', () => {
+appState.patientView = 'My History';
+switchPatientView(appState.patientView);
 });
 
-myHistoryBtn.addEventListener('click', () => {
-appState.page = 'My History';
-switchPatientView(appState.page);
+// Doctor Navigation
+doctorHistoryBtn.addEventListener('click', () => {
+appState.doctorView = 'Patient History';
+switchDoctorView(appState.doctorView);
+});
+doctorAppointmentsBtn.addEventListener('click', () => {
+appState.doctorView = 'Upcoming Appointments';
+switchDoctorView(appState.doctorView);
 });
 
 getPredictionBtn.addEventListener('click', async () => {
@@ -227,6 +303,34 @@ const filteredHistory = appState.history.filter(item =>
 item.username.toLowerCase().includes(query)
 );
 renderAllHistory(filteredHistory);
+});
+
+bookBtn.addEventListener('click', () => {
+const doctor = doctorSelect.value;
+const date = appointmentDateInput.value;
+const time = appointmentTimeInput.value;
+
+if (!doctor || !date || !time) {
+    alert("Please select a doctor, date, and time for your appointment.");
+    return;
+}
+
+const newAppointment = {
+    patient: appState.username,
+    doctor: doctor,
+    date: date,
+    time: time
+};
+
+appState.appointments.push(newAppointment);
+localStorage.setItem('healthNavigatorAppointments', JSON.stringify(appState.appointments));
+
+alert("Appointment booked successfully!"); // Use a custom modal
+
+// Clear inputs
+appointmentDateInput.value = '';
+appointmentTimeInput.value = '';
+
 });
 
 // --- Initial Render ---
